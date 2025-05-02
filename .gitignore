@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+*.env
+*.sqlite3
+*.log
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# System
+.DS_Store
+Thumbs.db
+
+# GitHub'da manuel oluşturulmuş dosyaları yok say
+LICENSE
+README.md
