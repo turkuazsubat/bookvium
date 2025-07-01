@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKVIUM - Sayfa Bulunamadı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f6f6f6;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigator Bar */
+        .navbar {
+            background-color: #fff;
+            border-bottom: 3px solid #a66d3a;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 40px 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #a66d3a;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #a66d3a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        .auth-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border: 2px solid #a66d3a;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .login-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        .signup-btn {
+            background-color: transparent;
+            color: #a66d3a;
+        }
+
+        .signup-btn:hover {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+        }
+
+        .error-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 60px 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border-top: 5px solid #a66d3a;
+        }
+
+        .error-illustration {
+            font-size: 120px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .error-code {
+            font-size: 72px;
+            font-weight: bold;
+            color: #a66d3a;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .error-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 35px;
+            line-height: 1.6;
+        }
+
+        .error-message strong {
+            color: #a66d3a;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .primary-btn {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #8b5a2f;
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            background-color: transparent;
+            color: #a66d3a;
+            border: 2px solid #a66d3a;
+        }
+
+        .secondary-btn:hover {
+            background-color: #a66d3a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .suggestions {
+            background-color: #f9f9f9;
+            border-left: 4px solid #a66d3a;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .suggestions h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .suggestions ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .suggestions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .suggestions li:before {
+            content: "📖";
+            position: absolute;
+            left: 0;
+        }
+
+        .suggestions a {
+            color: #0645ad;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .suggestions a:hover {
+            color: #a66d3a;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .error-card {
+                padding: 40px 20px;
+                margin: 20px;
+            }
+
+            .error-code {
+                font-size: 56px;
+            }
+
+            .error-title {
+                font-size: 24px;
+            }
+
+            .error-illustration {
+                font-size: 80px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 200px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 48px;
+            }
+
+            .error-title {
+                font-size: 20px;
+            }
+
+            .error-illustration {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigator Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="goToMain()">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">BOOKVIUM</span>
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Kitap, yazar veya konu ara...">
+                <button class="search-btn">Ara</button>
+            </div>
+            
+            <div class="auth-container">
+                <a href="#" class="auth-btn login-btn" onclick="goToLogin()">Giriş Yap</a>
+                <a href="#" class="auth-btn signup-btn" onclick="goToRegister()">Kayıt Ol</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="error-card">
+            <div class="error-illustration">📚❌</div>
+            <div class="error-code">404</div>
+            <h1 class="error-title">Sayfa Bulunamadı</h1>
+            <p class="error-message">
+                Maalesef aradığınız sayfa <strong>kütüphanemizde</strong> bulunmuyor.<br>
+                Sayfa taşınmış, silinmiş veya yanlış bir bağlantıya tıklamış olabilirsiniz.
+            </p>
+            
+            <div class="action-buttons">
+                <button class="action-btn primary-btn" onclick="goToMain()">
+                    🏠 Ana Sayfaya Dön
+                </button>
+                <button class="action-btn secondary-btn" onclick="goBack()">
+                    ↩️ Geri Git
+                </button>
+                <button class="action-btn secondary-btn" onclick="searchBooks()">
+                    🔍 Kitap Ara
+                </button>
+            </div>
+
+            <div class="suggestions">
+                <h3>📖 Popüler Kitaplarımız</h3>
+                <ul>
+                    <li><a href="#" onclick="goToBook('suc-ve-ceza')">Suç ve Ceza - Fyodor Dostoyevski</a></li>
+                    <li><a href="#" onclick="goToBook('kardesler-karamazov')">Karamazov Kardeşler - Fyodor Dostoyevski</a></li>
+                    <li><a href="#" onclick="goToBook('beyaz-geceler')">Beyaz Geceler - Fyodor Dostoyevski</a></li>
+                    <li><a href="#" onclick="goToAuthor('dostoyevski')">Fyodor Dostoyevski - Yazar Sayfası</a></li>
+                    <li><a href="#" onclick="goToCategory('rus-edebiyati')">Rus Edebiyatı Kategorisi</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sayfa yönlendirme fonksiyonları
+        function goToMain() {
+            window.location.href = 'main.html';
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function goToRegister() {
+            window.location.href = 'register.html';
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                goToMain();
+            }
+        }
+
+        function searchBooks() {
+            const searchBox = document.querySelector('.search-box');
+            searchBox.focus();
+            searchBox.placeholder = 'Ne aramak istiyorsunuz?';
+        }
+
+        function goToBook(bookId) {
+            window.location.href = `book.html?id=${bookId}`;
+        }
+
+        function goToAuthor(authorId) {
+            window.location.href = `author.html?id=${authorId}`;
+        }
+
+        function goToCategory(categoryId) {
+            window.location.href = `category.html?id=${categoryId}`;
+        }
+
+        // Arama fonksiyonu
+        document.querySelector('.search-box').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const query = document.querySelector('.search-box').value.trim();
+            if (query) {
+                window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+            }
+        });
+
+        // Klavye kısayolları
+        document.addEventListener('keydown', function(e) {
+            // ESC tuşu ile ana sayfaya dön
+            if (e.key === 'Escape') {
+                goToMain();
+            }
+            // Backspace tuşu ile geri git (input alanında değilse)
+            if (e.key === 'Backspace' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                goBack();
+            }
+        });
+
+        // Otomatik odaklanma
+        window.addEventListener('load', function() {
+            document.querySelector('.search-box').focus();
+        });
+    </script>
+</body>
+</html>

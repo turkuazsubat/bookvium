@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKVIUM - Kayıt Ol</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f6f6f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigator Bar */
+        .navbar {
+            background-color: #fff;
+            border-bottom: 3px solid #a66d3a;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 40px 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #a66d3a;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #a66d3a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        .auth-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border: 2px solid #a66d3a;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .current-btn {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .login-btn {
+            background-color: transparent;
+            color: #a66d3a;
+        }
+
+        .login-btn:hover {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .register-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .register-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid #a66d3a;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            border-color: #a66d3a;
+        }
+
+        .form-input.error {
+            border-color: #e74c3c;
+        }
+
+        .date-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .date-input {
+            flex: 1;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #a66d3a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        .register-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .login-link {
+            color: #a66d3a;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .login-link:hover {
+            color: #8b5a2f;
+            text-decoration: underline;
+        }
+
+        .general-error {
+            background-color: #fdf2f2;
+            border: 1px solid #fbb6b6;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .general-error.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .main-container {
+                padding: 0 15px;
+                margin: 30px auto;
+            }
+
+            .register-card {
+                padding: 30px 20px;
+            }
+
+            .register-title {
+                font-size: 24px;
+            }
+
+            .date-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigator Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="goToMain()">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">BOOKVIUM</span>
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Kitap, yazar veya konu ara...">
+                <button class="search-btn">Ara</button>
+            </div>
+            
+            <div class="auth-container">
+                <a href="#" class="auth-btn login-btn" onclick="goToLogin()">Giriş Yap</a>
+                <span class="auth-btn current-btn">Kayıt Ol</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="register-card">
+            <h1 class="register-title">Kayıt Ol</h1>
+            
+            <div class="general-error" id="generalError">
+                Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="firstName" class="form-label">Ad</label>
+                    <input type="text" id="firstName" name="firstName" class="form-input" required>
+                    <div class="error-message" id="firstNameError">Ad gereklidir.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName" class="form-label">Soyad</label>
+                    <input type="text" id="lastName" name="lastName" class="form-input" required>
+                    <div class="error-message" id="lastNameError">Soyad gereklidir.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                    <div class="error-message" id="emailError">Geçerli bir e-mail adresi giriniz.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Şifre</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                    <div class="error-message" id="passwordError">Şifre en az 6 karakter olmalıdır.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Şifre Doğrulama</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
+                    <div class="error-message" id="confirmPasswordError">Şifreler uyuşmuyor.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Doğum Tarihi</label>
+                    <div class="date-group">
+                        <select id="birthDay" name="birthDay" class="form-input date-input" required>
+                            <option value="">Gün</option>
+                        </select>
+                        <select id="birthMonth" name="birthMonth" class="form-input date-input" required>
+                            <option value="">Ay</option>
+                            <option value="1">Ocak</option>
+                            <option value="2">Şubat</option>
+                            <option value="3">Mart</option>
+                            <option value="4">Nisan</option>
+                            <option value="5">Mayıs</option>
+                            <option value="6">Haziran</option>
+                            <option value="7">Temmuz</option>
+                            <option value="8">Ağustos</option>
+                            <option value="9">Eylül</option>
+                            <option value="10">Ekim</option>
+                            <option value="11">Kasım</option>
+                            <option value="12">Aralık</option>
+                        </select>
+                        <select id="birthYear" name="birthYear" class="form-input date-input" required>
+                            <option value="">Yıl</option>
+                        </select>
+                    </div>
+                    <div class="error-message" id="birthDateError">Doğum tarihi seçiniz.</div>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerButton">Kayıt Ol</button>
+            </form>
+
+            <div class="form-footer">
+                <p>Zaten hesabınız var mı? <a href="#" class="login-link" onclick="goToLogin()">Giriş yapın</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form elementi ve input alanları
+        const registerForm = document.getElementById('registerForm');
+        const registerButton = document.getElementById('registerButton');
+        const generalError = document.getElementById('generalError');
+
+        // Input alanları
+        const firstNameInput = document.getElementById('firstName');
+        const lastNameInput = document.getElementById('lastName');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const birthDaySelect = document.getElementById('birthDay');
+        const birthMonthSelect = document.getElementById('birthMonth');
+        const birthYearSelect = document.getElementById('birthYear');
+
+        // Hata mesajları
+        const firstNameError = document.getElementById('firstNameError');
+        const lastNameError = document.getElementById('lastNameError');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+        const birthDateError = document.getElementById('birthDateError');
+
+        // Sayfa yönlendirme fonksiyonları
+        function goToMain() {
+            window.location.href = 'main.html';
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Gün seçeneklerini doldur
+        function populateDays() {
+            for (let i = 1; i <= 31; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                birthDaySelect.appendChild(option);
+            }
+        }
+
+        // Yıl seçeneklerini doldur
+        function populateYears() {
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1900; i--) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                birthYearSelect.appendChild(option);
+            }
+        }
+
+        // Sayfa yüklendiğinde çalıştır
+        window.onload = function() {
+            populateDays();
+            populateYears();
+        };
+
+        // Hata gösterme fonksiyonu
+        function showError(input, errorElement, message) {
+            input.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        // Hata gizleme fonksiyonu
+        function hideError(input, errorElement) {
+            input.classList.remove('error');
+            errorElement.classList.remove('show');
+        }
+
+        // Form validasyonu
+        function validateForm() {
+            let isValid = true;
+            
+            // Genel hata mesajını gizle
+            generalError.classList.remove('show');
+            
+            // Ad kontrolü
+            if (firstNameInput.value.trim() === '') {
+                showError(firstNameInput, firstNameError, 'Ad gereklidir.');
+                isValid = false;
+            } else {
+                hideError(firstNameInput, firstNameError);
+            }
+            
+            // Soyad kontrolü
+            if (lastNameInput.value.trim() === '') {
+                showError(lastNameInput, lastNameError, 'Soyad gereklidir.');
+                isValid = false;
+            } else {
+                hideError(lastNameInput, lastNameError);
+            }
+            
+            // E-mail kontrolü
+            const email = emailInput.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showError(emailInput, emailError, 'Geçerli bir e-mail adresi giriniz.');
+                isValid = false;
+            } else {
+                hideError(emailInput, emailError);
+            }
+            
+            // Şifre kontrolü
+            const password = passwordInput.value;
+            if (password.length < 6) {
+                showError(passwordInput, passwordError, 'Şifre en az 6 karakter olmalıdır.');
+                isValid = false;
+            } else {
+                hideError(passwordInput, passwordError);
+            }
+            
+            // Şifre doğrulama kontrolü
+            const confirmPassword = confirmPasswordInput.value;
+            if (password !== confirmPassword) {
+                showError(confirmPasswordInput, confirmPasswordError, 'Şifreler uyuşmuyor.');
+                isValid = false;
+            } else {
+                hideError(confirmPasswordInput, confirmPasswordError);
+            }
+            
+            // Doğum tarihi kontrolü
+            if (!birthDaySelect.value || !birthMonthSelect.value || !birthYearSelect.value) {
+                showError(birthDaySelect, birthDateError, 'Doğum tarihi seçiniz.');
+                isValid = false;
+            } else {
+                hideError(birthDaySelect, birthDateError);
+            }
+            
+            return isValid;
+        }
+
+        // Form gönderme eventi
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Butonu devre dışı bırak
+                registerButton.disabled = true;
+                registerButton.textContent = 'Kayıt oluşturuluyor...';
+                
+                // Simülasyon için 2 saniye bekle
+                setTimeout(() => {
+                    alert('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...');
+                    goToLogin();
+                }, 2000);
+            }
+        });
+
+        // Input alanlarında yazarken hataları temizle
+        firstNameInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                hideError(this, firstNameError);
+                generalError.classList.remove('show');
+            }
+        });
+
+        lastNameInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                hideError(this, lastNameError);
+                generalError.classList.remove('show');
+            }
+        });
+
+        emailInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                hideError(this, emailError);
+                generalError.classList.remove('show');
+            }
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                hideError(this, passwordError);
+                generalError.classList.remove('show');
+            }
+        });
+
+        confirmPasswordInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                hideError(this, confirmPasswordError);
+                generalError.classList.remove('show');
+            }
+        });
+
+        // Arama fonksiyonu
+        document.querySelector('.search-box').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    alert('Arama: "' + query + '" - Arama sayfası henüz hazırlanıyor.');
+                }
+            }
+        });
+
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const query = document.querySelector('.search-box').value.trim();
+            if (query) {
+                alert('Arama: "' + query + '" - Arama sayfası henüz hazırlanıyor.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKVIUM - Admin Paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f6f6f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigator Bar */
+        .navbar {
+            background-color: #fff;
+            border-bottom: 3px solid #a66d3a;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 40px 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: #a66d3a;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #a66d3a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        .auth-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border: 2px solid #a66d3a;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .login-btn:hover {
+            background-color: #8b5a2f;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 400;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #a66d3a;
+            padding-bottom: 10px;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            background-color: white;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            border: none;
+            border-right: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:last-child {
+            border-right: none;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: #a66d3a;
+            border-bottom: 3px solid #a66d3a;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            min-height: 700px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Search and Form Section */
+        .admin-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .search-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #a66d3a;
+            padding-bottom: 8px;
+        }
+
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            margin-top: 10px;
+        }
+
+        .search-result-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s;
+        }
+
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item.selected {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: #a66d3a;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #8b5a2f;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #a66d3a;
+            box-shadow: 0 0 0 2px rgba(166, 109, 58, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Action Buttons Container */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Selected Record Info */
+        .selected-record {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .selected-record-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+
+        .selected-record-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .status-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        /* Image Upload Styling */
+        .image-upload-container {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .image-upload-container:hover {
+            border-color: #a66d3a;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 0 auto 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .image-upload-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #218838;
+        }
+
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+
+            .main-container {
+                padding: 15px;
+            }
+
+            .tab-navigation {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .admin-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .image-upload-options {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigator Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="main.html" class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">BOOKVIUM</span>
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Kitap, yazar veya konu ara...">
+                <button class="search-btn">Ara</button>
+            </div>
+            
+            <div class="auth-container">
+                <a href="settings.html" class="auth-btn login-btn">Ayarlar</a>
+                <a href="main.html" class="auth-btn login-btn">Çıkış Yap</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <h1 class="page-title">Admin Paneli</h1>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" onclick="switchTab('books', this)">Kitaplar</button>
+            <button class="tab-btn" onclick="switchTab('authors', this)">Yazarlar</button>
+            <button class="tab-btn" onclick="switchTab('users', this)">Kullanıcılar</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Books Tab -->
+            <div class="tab-panel active" id="books">
+                <div class="admin-section">
+                    <!-- Search Section -->
+                    <div class="search-section">
+                        <h3 class="section-title">Kitap Ara</h3>
+                        <div class="search-form">
+                            <input type="text" class="search-input" id="book-search" placeholder="Kitap adı, yazar veya ISBN ile ara...">
+                            <button class="btn btn-primary btn-full" onclick="searchBooks()">Ara</button>
+                            <div class="search-results" id="book-search-results" style="display: none;">
+                                <!-- Search results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Kitap Bilgileri</h3>
+                        
+                        <!-- Selected Record Info -->
+                        <div class="selected-record" id="book-selected-info" style="display: none;">
+                            <div class="selected-record-title">Seçili Kayıt:</div>
+                            <div class="selected-record-info" id="book-selected-text"></div>
+                        </div>
+
+                        <!-- Status Message -->
+                        <div class="status-message status-info" id="book-status">
+                            Yeni kitap eklemek için bilgileri doldurun veya mevcut kitap aramak için arama kutusunu kullanın.
+                        </div>
+
+                        <form id="book-form">
+                            <!-- Image Upload Section -->
+                            <div class="form-group">
+                                <label class="form-label">Kapak Görseli</label>
+                                <div class="image-upload-container" id="book-image-container">
+                                    <img id="book-image-preview" class="image-preview" src="" alt="Kapak Önizlemesi" style="display: none;">
+                                    <div id="book-image-placeholder">
+                                        <p>Kapak görseli yükleyin veya URL girin</p>
+                                    </div>
+                                    <div class="image-upload-options">
+                                        <input type="file" id="book-image-file" class="file-input" accept="image/*" onchange="handleImageUpload('book')">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('book-image-file').click()">Dosya Seç</button>
+                                        <button type="button" class="remove-btn" onclick="removeImage('book')" style="display: none;" id="book-remove-btn">Kaldır</button>
+                                    </div>
+                                </div>
+                                <input type="url" class="form-control" id="book-cover" placeholder="veya URL girin: https://..." onchange="handleUrlInput('book')">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Kitap Adı *</label>
+                                <input type="text" class="form-control" id="book-title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yazar *</label>
+                                <input type="text" class="form-control" id="book-author" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">ISBN</label>
+                                <input type="text" class="form-control" id="book-isbn">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yayın Yılı</label>
+                                <input type="number" class="form-control" id="book-year">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Tür</label>
+                                <input type="text" class="form-control" id="book-genre">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Dil</label>
+                                <input type="text" class="form-control" id="book-language">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yayınevi</label>
+                                <input type="text" class="form-control" id="book-publisher">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Giriş</label>
+                                <textarea class="form-control form-textarea" id="book-intro" placeholder="Kitabın giriş bölümü..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Konu</label>
+                                <textarea class="form-control form-textarea" id="book-subject" placeholder="Kitabın konusu..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">İçerik</label>
+                                <textarea class="form-control form-textarea" id="book-content" placeholder="Kitabın içeriği..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Ayrıca Bakınız</label>
+                                <textarea class="form-control form-textarea" id="book-seealso" placeholder="İlgili kaynaklar..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Kaynakça</label>
+                                <textarea class="form-control form-textarea" id="book-references" placeholder="Kaynaklar..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Ağaç-Dal (Basım Bilgileri)</label>
+                                <input type="text" class="form-control" id="book-publication-info" placeholder="Örn: Kendime Düşünceler (Türkçe, İş Bankası, 2011)">
+                            </div>
+
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-success" onclick="saveBook()">Kaydet</button>
+                                <button type="button" class="btn btn-warning" onclick="updateBook()">Güncelle</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteBook()">Sil</button>
+                                <button type="button" class="btn btn-primary" onclick="clearBookForm()">Temizle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Authors Tab -->
+            <div class="tab-panel" id="authors">
+                <div class="admin-section">
+                    <!-- Search Section -->
+                    <div class="search-section">
+                        <h3 class="section-title">Yazar Ara</h3>
+                        <div class="search-form">
+                            <input type="text" class="search-input" id="author-search" placeholder="Yazar adı, ülke ile ara...">
+                            <button class="btn btn-primary btn-full" onclick="searchAuthors()">Ara</button>
+                            <div class="search-results" id="author-search-results" style="display: none;">
+                                <!-- Search results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Yazar Bilgileri</h3>
+                        
+                        <!-- Selected Record Info -->
+                        <div class="selected-record" id="author-selected-info" style="display: none;">
+                            <div class="selected-record-title">Seçili Kayıt:</div>
+                            <div class="selected-record-info" id="author-selected-text"></div>
+                        </div>
+
+                        <!-- Status Message -->
+                        <div class="status-message status-info" id="author-status">
+                            Yeni yazar eklemek için bilgileri doldurun veya mevcut yazar aramak için arama kutusunu kullanın.
+                        </div>
+
+                        <form id="author-form">
+                            <!-- Image Upload Section -->
+                            <div class="form-group">
+                                <label class="form-label">Yazar Fotoğrafı</label>
+                                <div class="image-upload-container" id="author-image-container">
+                                    <img id="author-image-preview" class="image-preview" src="" alt="Yazar Fotoğrafı" style="display: none;">
+                                    <div id="author-image-placeholder">
+                                        <p>Yazar fotoğrafı yükleyin veya URL girin</p>
+                                    </div>
+                                    <div class="image-upload-options">
+                                        <input type="file" id="author-image-file" class="file-input" accept="image/*" onchange="handleImageUpload('author')">
+                                        <button type="button" class="upload-btn" onclick="document.getElementById('author-image-file').click()">Dosya Seç</button>
+                                        <button type="button" class="remove-btn" onclick="removeImage('author')" style="display: none;" id="author-remove-btn">Kaldır</button>
+                                    </div>
+                                </div>
+                                <input type="url" class="form-control" id="author-photo" placeholder="veya URL girin: https://..." onchange="handleUrlInput('author')">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yazar Adı *</label>
+                                <input type="text" class="form-control" id="author-name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Ülke</label>
+                                <input type="text" class="form-control" id="author-country">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Dil</label>
+                                <input type="text" class="form-control" id="author-language">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Doğum Tarihi</label>
+                                <input type="date" class="form-control" id="author-birth">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Ölüm Tarihi</label>
+                                <input type="date" class="form-control" id="author-death">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yayım</label>
+                                <input type="text" class="form-control" id="author-publication">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Giriş</label>
+                                <textarea class="form-control form-textarea" id="author-intro" placeholder="Yazarın tanıtımı..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Yaşam</label>
+                                <textarea class="form-control form-textarea" id="author-life" placeholder="Yazarın yaşam öyküsü..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Eserleri</label>
+                                <textarea class="form-control form-textarea" id="author-works" placeholder="Yazarın eserleri..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Ayrıca Bakınız</label>
+                                <textarea class="form-control form-textarea" id="author-seealso" placeholder="İlgili kaynaklar..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Kaynakça</label>
+                                <textarea class="form-control form-textarea" id="author-references" placeholder="Kaynaklar..."></textarea>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-success" onclick="saveAuthor()">Kaydet</button>
+                                <button type="button" class="btn btn-warning" onclick="updateAuthor()">Güncelle</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteAuthor()">Sil</button>
+                                <button type="button" class="btn btn-primary" onclick="clearAuthorForm()">Temizle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab - Tamamlanmış -->
+            <div class="tab-panel" id="users">
+                <div class="admin-section">
+                    <!-- Search Section -->
+                    <div class="search-section">
+                        <h3 class="section-title">Kullanıcı Ara</h3>
+                        <div class="search-form">
+                            <input type="text" class="search-input" id="user-search" placeholder="E-posta veya UID ile ara...">
+                            <button class="btn btn-primary btn-full" onclick="searchUsers()">Ara</button>
+                            <div class="search-results" id="user-search-results" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <!-- Form Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">Kullanıcı Bilgileri</h3>
+                        <div class="selected-record" id="user-selected-info" style="display: none;">
+                            <div class="selected-record-title">Seçili Kayıt:</div>
+                            <div class="selected-record-info" id="user-selected-text"></div>
+                        </div>
+                        <div class="status-message status-info" id="user-status">
+                            Yeni kullanıcı eklemek için bilgileri doldurun veya mevcut kullanıcı aramak için arama kutusunu kullanın.
+                        </div>
+                        <form id="user-form">
+                            <div class="form-group">
+                                <label class="form-label">UID *</label>
+                                <input type="text" class="form-control" id="user-uid" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ad *</label>
+                                <input type="text" class="form-control" id="user-ad" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Soyad *</label>
+                                <input type="text" class="form-control" id="user-soyad" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">E-posta *</label>
+                                <input type="email" class="form-control" id="user-mail" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Şifre *</label>
+                                <input type="password" class="form-control" id="user-sifre" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Doğum Tarihi</label>
+                                <input type="date" class="form-control" id="user-dogum">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Profil Resmi (Base64 veya dosya)</label>
+                                <input type="text" class="form-control" id="user-pp" placeholder="Base64 veya dosya adı">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Profil Resmi URL</label>
+                                <input type="url" class="form-control" id="user-ppurl" placeholder="https://...">
+                            </div>
+                            <div class="action-buttons">
+                                <button type="button" class="btn btn-success" onclick="saveUser()">Kaydet</button>
+                                <button type="button" class="btn btn-warning" onclick="updateUser()">Güncelle</button>
+                                <button type="button" class="btn btn-danger" onclick="deleteUser()">Sil</button>
+                                <button type="button" class="btn btn-primary" onclick="clearUserForm()">Temizle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSelectedRecord = null;
+        let currentTab = 'books';
+        let currentSelectedUserId = null;
+
+        // Sample data for demonstration
+        const sampleBooks = [
+            {
+                id: 1,
+                title: "Kendime Düşünceler",
+                author: "Marcus Aurelius",
+                isbn: "9789754584547",
+                year: 2011,
+                genre: "Felsefe",
+                language: "Türkçe",
+                publisher: "İş Bankası Kültür Yayınları",
+                cover: "https://example.com/cover1.jpg",
+                intro: "Roma İmparatoru Marcus Aurelius'un özel notları...",
+                subject: "Stoik felsefe ve yaşam bilgeliği",
+                content: "Bu eser, Roma İmparatoru Marcus Aurelius'un kendisi için yazdığı düşüncelerden oluşur...",
+                seealso: "Seneca, Epiktetos",
+                references: "Hadot, P. (2001). The Inner Citadel",
+                publicationInfo: "Kendime Düşünceler (Türkçe, İş Bankası, 2011)"
+            },
+            {
+                id: 2,
+                title: "1984",
+                author: "George Orwell",
+                isbn: "9780451524935",
+                year: 1949,
+                genre: "Distopya",
+                language: "İngilizce",
+                publisher: "Secker & Warburg",
+                cover: "https://example.com/cover2.jpg",
+                intro: "Totaliter bir gelecek toplumun korkunç tablosu...",
+                subject: "Totaliterlik, özgürlük, düşünce suçu",
+                content: "Winston Smith'in hikayesi...",
+                seealso: "Cesur Yeni Dünya, Fahrenheit 451",
+                references: "Orwell, G. (1949). Nineteen Eighty-Four",
+                publicationInfo: "1984 (İngilizce, Secker & Warburg, 1949)"
+            }
+        ];
+
+        const sampleAuthors = [
+            {
+                id: 1,
+                name: "Marcus Aurelius",
+                country: "Roma İmparatorluğu",
+                language: "Latince",
+                birth: "0121-04-26",
+                death: "0180-03-17",
+                publication: "Kendime Düşünceler",
+                photo: "https://example.com/marcus.jpg",
+                intro: "Roma İmparatoru ve Stoik filozof",
+                life: "Marcus Aurelius, 121-180 yılları arasında yaşamış Roma İmparatoru ve filozoftur...",
+                works: "Kendime Düşünceler (Ta eis heauton)",
+                seealso: "Seneca, Epiktetos, Stoik Felsefe",
+                references: "Hadot, P. (2001). The Inner Citadel"
+            },
+            {
+                id: 2,
+                name: "George Orwell",
+                country: "İngiltere",
+                language: "İngilizce",
+                birth: "1903-06-25",
+                death: "1950-01-21",
+                publication: "1984, Hayvan Çiftliği",
+                photo: "https://example.com/orwell.jpg",
+                intro: "İngiliz yazar ve gazeteci",
+                life: "Eric Arthur Blair olarak doğan George Orwell...",
+                works: "1984, Hayvan Çiftliği, Burma Günleri",
+                seealso: "Aldous Huxley, Ray Bradbury",
+                references: "Orwell, G. Complete Works"
+            }
+        ];
+
+        // Tab switching function
+        function switchTab(tabName, tabButton) {
+            // Hide all tab panels
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab panel
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab button
+            tabButton.classList.add('active');
+
+            // Update current tab
+            currentTab = tabName;
+
+            // Clear any selected record
+            currentSelectedRecord = null;
+            clearSelectedRecord();
+        }
+
+        // Image handling functions
+        function handleImageUpload(type) {
+            const fileInput = document.getElementById(`${type}-image-file`);
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    displayImage(type, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleUrlInput(type) {
+            const urlInput = document.getElementById(`${type}-${type === 'book' ? 'cover' : type === 'author' ? 'photo' : 'photo'}`);
+            const url = urlInput.value.trim();
+            
+            if (url) {
+                displayImage(type, url);
+            } else {
+                removeImage(type);
+            }
+        }
+
+        function displayImage(type, src) {
+            const preview = document.getElementById(`${type}-image-preview`);
+            const placeholder = document.getElementById(`${type}-image-placeholder`);
+            const removeBtn = document.getElementById(`${type}-remove-btn`);
+            
+            preview.src = src;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+            removeBtn.style.display = 'inline-block';
+        }
+
+        function removeImage(type) {
+            const preview = document.getElementById(`${type}-image-preview`);
+            const placeholder = document.getElementById(`${type}-image-placeholder`);
+            const removeBtn = document.getElementById(`${type}-remove-btn`);
+            const fileInput = document.getElementById(`${type}-image-file`);
+            const urlInput = document.getElementById(`${type}-${type === 'book' ? 'cover' : type === 'author' ? 'photo' : 'photo'}`);
+            
+            preview.src = '';
+            preview.style.display = 'none';
+            placeholder.style.display = 'block';
+            removeBtn.style.display = 'none';
+            fileInput.value = '';
+            urlInput.value = '';
+        }
+
+        // Search functions
+        function searchBooks() {
+            const searchTerm = document.getElementById('book-search').value.toLowerCase();
+            const resultsContainer = document.getElementById('book-search-results');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+
+            const filteredBooks = sampleBooks.filter(book => 
+                book.title.toLowerCase().includes(searchTerm) ||
+                book.author.toLowerCase().includes(searchTerm) ||
+                book.isbn.includes(searchTerm)
+            );
+
+            displaySearchResults('book', filteredBooks, resultsContainer);
+        }
+
+        function searchAuthors() {
+            const searchTerm = document.getElementById('author-search').value.toLowerCase();
+            const resultsContainer = document.getElementById('author-search-results');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+
+            const filteredAuthors = sampleAuthors.filter(author => 
+                author.name.toLowerCase().includes(searchTerm) ||
+                author.country.toLowerCase().includes(searchTerm)
+            );
+
+            displaySearchResults('author', filteredAuthors, resultsContainer);
+        }
+
+        function searchUsers() {
+            const searchTerm = document.getElementById('user-search').value.trim();
+            const resultsContainer = document.getElementById('user-search-results');
+            if (searchTerm.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            fetch(`/users/`)
+                .then(res => res.json())
+                .then(users => {
+                    const filtered = users.filter(user =>
+                        user.mail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        user.uid.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                    displaySearchResults('user', filtered, resultsContainer);
+                });
+        }
+
+        function displaySearchResults(type, results, container) {
+            container.innerHTML = '';
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div class="search-result-item">Sonuç bulunamadı</div>';
+            } else {
+                results.forEach(item => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.onclick = () => selectRecord(type, item);
+                    
+                    if (type === 'book') {
+                        resultItem.innerHTML = `<strong>${item.title}</strong><br><small>${item.author} - ${item.year || 'Bilinmiyor'}</small>`;
+                    } else if (type === 'author') {
+                        resultItem.innerHTML = `<strong>${item.name}</strong><br><small>${item.country} - ${item.birth ? new Date(item.birth).getFullYear() : 'Bilinmiyor'}</small>`;
+                    } else if (type === 'user') {
+                        resultItem.innerHTML = `<strong>${item.mail}</strong>`;
+                    }
+                    
+                    container.appendChild(resultItem);
+                });
+            }
+            
+            container.style.display = 'block';
+        }
+
+        function selectRecord(type, record) {
+            currentSelectedRecord = { type, record };
+            
+            // Hide search results
+            document.getElementById(`${type}-search-results`).style.display = 'none';
+            
+            // Show selected record info
+            const selectedInfo = document.getElementById(`${type}-selected-info`);
+            const selectedText = document.getElementById(`${type}-selected-text`);
+            
+            if (type === 'book') {
+                selectedText.textContent = `${record.title} - ${record.author}`;
+                populateBookForm(record);
+            } else if (type === 'author') {
+                selectedText.textContent = `${record.name} - ${record.country}`;
+                populateAuthorForm(record);
+            } else if (type === 'user') {
+                selectedText.textContent = record.mail;
+                populateUserForm(record);
+            }
+            
+            selectedInfo.style.display = 'block';
+        }
+
+        // Form population functions
+        function populateBookForm(book) {
+            document.getElementById('book-title').value = book.title || '';
+            document.getElementById('book-author').value = book.author || '';
+            document.getElementById('book-isbn').value = book.isbn || '';
+            document.getElementById('book-year').value = book.year || '';
+            document.getElementById('book-genre').value = book.genre || '';
+            document.getElementById('book-language').value = book.language || '';
+            document.getElementById('book-publisher').value = book.publisher || '';
+            document.getElementById('book-cover').value = book.cover || '';
+            document.getElementById('book-intro').value = book.intro || '';
+            document.getElementById('book-subject').value = book.subject || '';
+            document.getElementById('book-content').value = book.content || '';
+            document.getElementById('book-seealso').value = book.seealso || '';
+            document.getElementById('book-references').value = book.references || '';
+            document.getElementById('book-publication-info').value = book.publicationInfo || '';
+            
+            if (book.cover) {
+                displayImage('book', book.cover);
+            }
+            
+            updateStatus('book', 'Kayıt seçildi. Güncellemek için değişiklikleri yapın ve Güncelle butonuna tıklayın.', 'info');
+        }
+
+        function populateAuthorForm(author) {
+            document.getElementById('author-name').value = author.name || '';
+            document.getElementById('author-country').value = author.country || '';
+            document.getElementById('author-language').value = author.language || '';
+            document.getElementById('author-birth').value = author.birth || '';
+            document.getElementById('author-death').value = author.death || '';
+            document.getElementById('author-publication').value = author.publication || '';
+            document.getElementById('author-photo').value = author.photo || '';
+            document.getElementById('author-intro').value = author.intro || '';
+            document.getElementById('author-life').value = author.life || '';
+            document.getElementById('author-works').value = author.works || '';
+            document.getElementById('author-seealso').value = author.seealso || '';
+            document.getElementById('author-references').value = author.references || '';
+            
+            if (author.photo) {
+                displayImage('author', author.photo);
+            }
+            
+            updateStatus('author', 'Kayıt seçildi. Güncellemek için değişiklikleri yapın ve Güncelle butonuna tıklayın.', 'info');
+        }
+
+        function populateUserForm(user) {
+            document.getElementById('user-uid').value = user.uid || '';
+            document.getElementById('user-ad').value = user.ad || '';
+            document.getElementById('user-soyad').value = user.soyad || '';
+            document.getElementById('user-mail').value = user.mail || '';
+            document.getElementById('user-sifre').value = '';
+            document.getElementById('user-dogum').value = user.dogum || '';
+            document.getElementById('user-pp').value = user.pp || '';
+            document.getElementById('user-ppurl').value = user.ppurl || '';
+            currentSelectedUserId = user.id;
+            updateStatus('user', 'Kayıt seçildi. Güncellemek için değişiklikleri yapın ve Güncelle butonuna tıklayın.', 'info');
+        }
+
+        // CRUD operations
+        function saveBook() {
+            const title = document.getElementById('book-title').value;
+            const author = document.getElementById('book-author').value;
+            
+            if (!title || !author) {
+                updateStatus('book', 'Kitap adı ve yazar alanları zorunludur!', 'error');
+                return;
+            }
+            
+            // Simulate saving
+            updateStatus('book', 'Kitap başarıyla kaydedildi!', 'success');
+            setTimeout(() => clearBookForm(), 2000);
+        }
+
+        function updateBook() {
+            if (!currentSelectedRecord || currentSelectedRecord.type !== 'book') {
+                updateStatus('book', 'Güncellenecek kitap seçilmedi!', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('book-title').value;
+            const author = document.getElementById('book-author').value;
+            
+            if (!title || !author) {
+                updateStatus('book', 'Kitap adı ve yazar alanları zorunludur!', 'error');
+                return;
+            }
+            
+            updateStatus('book', 'Kitap başarıyla güncellendi!', 'success');
+        }
+
+        function deleteBook() {
+            if (!currentSelectedRecord || currentSelectedRecord.type !== 'book') {
+                updateStatus('book', 'Silinecek kitap seçilmedi!', 'error');
+                return;
+            }
+            
+            if (confirm('Bu kitabı silmek istediğinizden emin misiniz?')) {
+                updateStatus('book', 'Kitap başarıyla silindi!', 'success');
+                setTimeout(() => clearBookForm(), 2000);
+            }
+        }
+
+        function saveAuthor() {
+            const name = document.getElementById('author-name').value;
+            
+            if (!name) {
+                updateStatus('author', 'Yazar adı alanı zorunludur!', 'error');
+                return;
+            }
+            
+            updateStatus('author', 'Yazar başarıyla kaydedildi!', 'success');
+            setTimeout(() => clearAuthorForm(), 2000);
+        }
+
+        function updateAuthor() {
+            if (!currentSelectedRecord || currentSelectedRecord.type !== 'author') {
+                updateStatus('author', 'Güncellenecek yazar seçilmedi!', 'error');
+                return;
+            }
+            
+            const name = document.getElementById('author-name').value;
+            
+            if (!name) {
+                updateStatus('author', 'Yazar adı alanı zorunludur!', 'error');
+                return;
+            }
+            
+            updateStatus('author', 'Yazar başarıyla güncellendi!', 'success');
+        }
+
+        function deleteAuthor() {
+            if (!currentSelectedRecord || currentSelectedRecord.type !== 'author') {
+                updateStatus('author', 'Silinecek yazar seçilmedi!', 'error');
+                return;
+            }
+            
+            if (confirm('Bu yazarı silmek istediğinizden emin misiniz?')) {
+                updateStatus('author', 'Yazar başarıyla silindi!', 'success');
+                setTimeout(() => clearAuthorForm(), 2000);
+            }
+        }
+
+        function saveUser() {
+            const data = {
+                uid: document.getElementById('user-uid').value,
+                ad: document.getElementById('user-ad').value,
+                soyad: document.getElementById('user-soyad').value,
+                mail: document.getElementById('user-mail').value,
+                sifre: document.getElementById('user-sifre').value,
+                dogum: document.getElementById('user-dogum').value,
+                pp: document.getElementById('user-pp').value,
+                ppurl: document.getElementById('user-ppurl').value
+            };
+            if (!data.uid || !data.ad || !data.soyad || !data.mail || !data.sifre) {
+                updateStatus('user', 'Tüm zorunlu alanları doldurun!', 'error');
+                return;
+            }
+            fetch(`/users/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(user => {
+                updateStatus('user', 'Kullanıcı başarıyla kaydedildi!', 'success');
+                setTimeout(() => clearUserForm(), 2000);
+                searchUsers();
+            })
+            .catch(() => updateStatus('user', 'Kullanıcı kaydedilemedi!', 'error'));
+        }
+
+        function updateUser() {
+            if (!currentSelectedUserId) {
+                updateStatus('user', 'Güncellenecek kullanıcı seçilmedi!', 'error');
+                return;
+            }
+            const data = {
+                uid: document.getElementById('user-uid').value,
+                ad: document.getElementById('user-ad').value,
+                soyad: document.getElementById('user-soyad').value,
+                mail: document.getElementById('user-mail').value,
+                sifre: document.getElementById('user-sifre').value,
+                dogum: document.getElementById('user-dogum').value,
+                pp: document.getElementById('user-pp').value,
+                ppurl: document.getElementById('user-ppurl').value
+            };
+            fetch(`/users/${currentSelectedUserId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(user => {
+                updateStatus('user', 'Kullanıcı başarıyla güncellendi!', 'success');
+                searchUsers();
+            })
+            .catch(() => updateStatus('user', 'Kullanıcı güncellenemedi!', 'error'));
+        }
+
+        function deleteUser() {
+            if (!currentSelectedUserId) {
+                updateStatus('user', 'Silinecek kullanıcı seçilmedi!', 'error');
+                return;
+            }
+            if (confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+                fetch(`/users/${currentSelectedUserId}`, { method: 'DELETE' })
+                .then(res => res.ok ? res.json() : Promise.reject(res))
+                .then(() => {
+                    updateStatus('user', 'Kullanıcı başarıyla silindi!', 'success');
+                    setTimeout(() => clearUserForm(), 2000);
+                    searchUsers();
+                })
+                .catch(() => updateStatus('user', 'Kullanıcı silinemedi!', 'error'));
+            }
+        }
+
+        // Clear form functions
+        function clearBookForm() {
+            document.getElementById('book-form').reset();
+            removeImage('book');
+            clearSelectedRecord();
+            updateStatus('book', 'Yeni kitap eklemek için bilgileri doldurun veya mevcut kitap aramak için arama kutusunu kullanın.', 'info');
+        }
+
+        function clearAuthorForm() {
+            document.getElementById('author-form').reset();
+            removeImage('author');
+            clearSelectedRecord();
+            updateStatus('author', 'Yeni yazar eklemek için bilgileri doldurun veya mevcut yazar aramak için arama kutusunu kullanın.', 'info');
+        }
+
+        function clearUserForm() {
+            document.getElementById('user-form').reset();
+            removeImage('user');
+            clearSelectedRecord();
+            updateStatus('user', 'Yeni kullanıcı eklemek için bilgileri doldurun veya mevcut kullanıcı aramak için arama kutusunu kullanın.', 'info');
+        }
+
+        function clearSelectedRecord() {
+            const types = ['book', 'author', 'user'];
+            types.forEach(type => {
+                const selectedInfo = document.getElementById(`${type}-selected-info`);
+                if (selectedInfo) {
+                    selectedInfo.style.display = 'none';
+                }
+            });
+            currentSelectedRecord = null;
+        }
+
+        // Status update function
+        function updateStatus(type, message, statusType) {
+            const statusElement = document.getElementById(`${type}-status`);
+            statusElement.className = `status-message status-${statusType}`;
+            statusElement.textContent = message;
+        }
+
+        // Search on enter key
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('book-search').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchBooks();
+                } else if (this.value.length >= 2) {
+                    searchBooks();
+                } else if (this.value.length === 0) {
+                    document.getElementById('book-search-results').style.display = 'none';
+                }
+            });
+
+            document.getElementById('author-search').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchAuthors();
+                } else if (this.value.length >= 2) {
+                    searchAuthors();
+                } else if (this.value.length === 0) {
+                    document.getElementById('author-search-results').style.display = 'none';
+                }
+            });
+
+            document.getElementById('user-search').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    searchUsers();
+                } else if (this.value.length >= 2) {
+                    searchUsers();
+                } else if (this.value.length === 0) {
+                    document.getElementById('user-search-results').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
